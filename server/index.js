@@ -24,6 +24,8 @@ const stocks = [];
 io.on('connection', (socket) => {
   console.log('a user connected');
 
+  io.emit('Show Stock', stocks);
+
   socket.on('Add Stock', (stockName) => {
     stocks.push(stockName);
     io.emit('Add Stock', stocks);

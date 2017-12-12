@@ -17,6 +17,10 @@ class App extends React.Component {
     // set socket info
     const { socket } = this.props;
 
+    socket.on('Show Stock', (stocks) => {
+      this.setState({ stocksPicked: stocks });
+    });
+
     socket.on('Add Stock', (stocks) => {
       this.setState({ stocksPicked: stocks, StockFormValue: '' });
     });
