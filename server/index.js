@@ -19,9 +19,15 @@ app.get('*', (req, res) => {
 
 const server = http.Server(app);
 const io = socketIO(server);
+const stocks = [];
 
 io.on('connection', (socket) => {
   console.log('a user connected');
+
+  socket.on('Add Stock', (stockName) => {
+    stocks.push(stockName);
+    io.emit('Add Stock', stocks);
+  });
 
   socket.on('disconnect', () => {
     console.log('user disconnect');
