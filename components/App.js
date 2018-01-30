@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Graph from './components/Graph';
-import AddStockForm from './components/AddStockForm';
-import StockList from './components/StockList';
+import Graph from './Graph';
+import AddStockForm from './AddStockForm';
+import StockList from './StockList';
 
 class App extends React.Component {
   constructor(props) {
@@ -17,21 +17,21 @@ class App extends React.Component {
     // set socket info
     const { socket } = this.props;
 
-    socket.on('Show Stock', (stocks) => {
+    socket.on('Show Stock', stocks => {
       this.setState({ stocksPicked: stocks });
     });
 
-    socket.on('Add Stock', (stocks) => {
+    socket.on('Add Stock', stocks => {
       this.setState({ stocksPicked: stocks, StockFormValue: '' });
     });
   }
 
   // handleChange and handleSubmit for AddStockForm
-  handleChange = (event) => {
+  handleChange = event => {
     this.setState({ StockFormValue: event.target.value });
   };
 
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     const { StockFormValue } = this.state;
     const { socket } = this.props;
     socket.emit('Add Stock', StockFormValue);
