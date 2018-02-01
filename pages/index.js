@@ -2,6 +2,11 @@ import React from 'react';
 import io from 'socket.io-client';
 import fetch from 'isomorphic-fetch';
 
+import Header from '../components/Header';
+import Form from '../components/Form';
+import Graph from '../components/Graph';
+import List from '../components/List';
+
 class HomePage extends React.Component {
   static async getInitialProps() {
     const response = await fetch(`http://localhost:${process.env.PORT}/stocks`);
@@ -60,12 +65,14 @@ class HomePage extends React.Component {
   render() {
     return (
       <div>
-        <h1>StockLi</h1>
-        <form onSubmit={this.handleSubmit}>
-          <input onChange={this.handleChange} type="text" value={this.state.field} />
-          <button>Send</button>
-        </form>
-        <ul>{this.state.stocks.map(stock => <li key={stock.id}>{stock.value}</li>)}</ul>
+        <Header name="StockLi" />
+        <Form
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          value={this.state.field}
+        />
+        <List stocks={this.state.stocks} />
+        <Graph />
       </div>
     );
   }

@@ -7,7 +7,7 @@ const Form = ({ handleChange, handleSubmit, value }) => (
       Stock:
       <input type="text" id="stockName" value={value} onChange={handleChange} />
     </label>
-    <input type="submit" value="Add" />
+    <button>Send</button>
   </form>
 );
 
