@@ -3,7 +3,8 @@
   "plugins": [
       "react",
       "jsx-a11y",
-      "import"
+      "import",
+      "flowtype"
   ],
   "parser": "babel-eslint",
   "parserOptions": {
