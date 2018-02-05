@@ -1,11 +1,7 @@
-/* @flow */
+// @flow
 
 import * as React from 'react';
-
-type Stock = {
-  id: number,
-  value: string
-};
+import type { Stock } from '../utils/custom-types';
 
 type Props = {
   stocks: Array<Stock>
