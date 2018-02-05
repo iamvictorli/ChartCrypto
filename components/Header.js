@@ -1,5 +1,10 @@
-import React from 'react';
+/* @flow */
+import * as React from 'react';
 
-const Header = ({ name }) => <h1>{name}</h1>;
+type Props = {
+  name: string
+};
+
+const Header = ({ name }: Props) => <h1>{name}</h1>;
 
 export default Header;

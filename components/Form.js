@@ -1,7 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+/* @flow */
 
-const Form = ({ handleChange, handleSubmit, value }) => (
+import React from 'react';
+
+type Props = {
+  handleChange: Function,
+  handleSubmit: Function,
+  value: string
+};
+
+const Form = ({ handleChange, handleSubmit, value }: Props) => (
   <form onSubmit={handleSubmit}>
     <label htmlFor="stockName">
       Stock:
@@ -10,11 +17,5 @@ const Form = ({ handleChange, handleSubmit, value }) => (
     <button>Send</button>
   </form>
 );
-
-Form.propTypes = {
-  handleChange: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired
-};
 
 export default Form;
