@@ -22,6 +22,8 @@
   "rules": {
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "comma-dangle": ["error", "never"],
-    "arrow-parens": ["error", "as-needed"]
+    "arrow-parens": ["error", "as-needed"],
+    "flowtype/define-flow-type": 1,
+    "flowtype/use-flow-type": 1
   }
 }

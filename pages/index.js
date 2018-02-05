@@ -1,4 +1,6 @@
-import React from 'react';
+// @flow
+
+import * as React from 'react';
 import io from 'socket.io-client';
 import fetch from 'isomorphic-fetch';
 
@@ -7,7 +9,18 @@ import Form from '../components/Form';
 import Graph from '../components/Graph';
 import List from '../components/List';
 
-class HomePage extends React.Component {
+import type { Stock } from '../utils/custom-types';
+
+type Props = {
+  stocks: Array<Stock>
+};
+
+type State = {
+  field: string,
+  stocks: Array<Stock>
+};
+
+class HomePage extends React.Component<Props, State> {
   static async getInitialProps() {
     const response = await fetch(`http://localhost:${process.env.PORT}/stocks`);
     const stocks = await response.json();
@@ -37,17 +50,17 @@ class HomePage extends React.Component {
   }
 
   // when received a broadcast combining state of stocks
-  handleStocks = receivedStock => {
+  handleStocks = (receivedStock: Stock) => {
     this.setState(state => ({ stocks: state.stocks.concat(receivedStock) }));
   };
 
   // handle the change in the input field
-  handleChange = event => {
+  handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
     this.setState({ field: event.target.value });
   };
 
   // submitting form event
-  handleSubmit = event => {
+  handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const newStock = {
       id: new Date().getTime(),
