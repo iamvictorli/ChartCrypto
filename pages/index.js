@@ -22,7 +22,8 @@ type State = {
 
 class HomePage extends React.Component<Props, State> {
   static async getInitialProps() {
-    const response = await fetch(`http://localhost:${process.env.PORT}/stocks`);
+    const port = process.env.PORT || 3000;
+    const response = await fetch(`http://localhost:${port}/stocks`);
     const stocks = await response.json();
     return {
       stocks
@@ -56,7 +57,7 @@ class HomePage extends React.Component<Props, State> {
 
   // handle the change in the input field
   handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-    this.setState({ field: event.target.value });
+    this.setState({ field: event.currentTarget.value });
   };
 
   // submitting form event
