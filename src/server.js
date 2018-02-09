@@ -24,6 +24,11 @@ io.on('connection', socket => {
     socket.broadcast.emit('Add Stock', stock);
   });
 
+  socket.on('Delete Stock', stockID => {
+    stocks.filter(stock => stock.id !== stockID);
+    socket.broadcast.emit('Delete Stock', stockID);
+  });
+
   socket.on('disconnect', () => {
     console.log('user disconnect');
   });

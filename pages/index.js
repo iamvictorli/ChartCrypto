@@ -42,11 +42,13 @@ class HomePage extends React.Component<Props, State> {
   componentDidMount() {
     this.socket = io();
     this.socket.on('Add Stock', this.handleStocks);
+    this.socket.on('Delete Stock', this.remove);
   }
 
   componentWillUnmount() {
     // close socket
     this.socket.off('Add Stock', this.handleStocks);
+    this.socket.off('Delete Stock', this.remove);
     this.socket.close();
   }
 
@@ -76,6 +78,19 @@ class HomePage extends React.Component<Props, State> {
     }));
   };
 
+  deleteStock = (event: SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const stockID = parseInt(event.currentTarget.value, 10);
+    this.socket.emit('Delete Stock', stockID);
+    this.remove(stockID);
+  };
+
+  // when received a broadcast of a stockID to remove
+  remove = (stockID: number) => {
+    const updatedStocks = this.state.stocks.filter(stock => stock.id !== stockID);
+    this.setState({ stocks: updatedStocks });
+  };
+
   render() {
     return (
       <div>
@@ -85,7 +100,7 @@ class HomePage extends React.Component<Props, State> {
           handleSubmit={this.handleSubmit}
           value={this.state.field}
         />
-        <List stocks={this.state.stocks} />
+        <List stocks={this.state.stocks} deleteStock={this.deleteStock} />
         <Graph />
       </div>
     );

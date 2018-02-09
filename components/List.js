@@ -4,11 +4,21 @@ import * as React from 'react';
 import type { Stock } from '../utils/custom-types';
 
 type Props = {
-  stocks: Array<Stock>
+  stocks: Array<Stock>,
+  deleteStock: Function
 };
 
-const List = ({ stocks }: Props) => (
-  <ul>{stocks.map(stock => <li key={stock.id}>{stock.value}</li>)}</ul>
+const List = ({ stocks, deleteStock }: Props) => (
+  <ul>
+    {stocks.map(stock => (
+      <div>
+        <li key={stock.id}>{stock.value}</li>
+        <button onClick={deleteStock} value={stock.id}>
+          Delete
+        </button>
+      </div>
+    ))}
+  </ul>
 );
 
 export default List;
