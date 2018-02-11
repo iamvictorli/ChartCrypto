@@ -42,19 +42,19 @@ class HomePage extends React.Component<Props, State> {
   componentDidMount() {
     this.socket = io();
     this.socket.on('Add Stock', this.handleStocks);
-    this.socket.on('Delete Stock', this.remove);
+    this.socket.on('Delete Stock', this.handleStocks);
   }
 
   componentWillUnmount() {
     // close socket
     this.socket.off('Add Stock', this.handleStocks);
-    this.socket.off('Delete Stock', this.remove);
+    this.socket.off('Delete Stock', this.handleStocks);
     this.socket.close();
   }
 
-  // when received a broadcast combining state of stocks
-  handleStocks = (receivedStock: Stock) => {
-    this.setState(state => ({ stocks: state.stocks.concat(receivedStock) }));
+  // changes the stock array for each broadcast
+  handleStocks = (receivedStock: Array<Stock>) => {
+    this.setState({ stocks: receivedStock });
   };
 
   // handle the change in the input field
@@ -72,23 +72,15 @@ class HomePage extends React.Component<Props, State> {
 
     // send to server to broadcast to other clients to add stock
     this.socket.emit('Add Stock', newStock);
-    this.setState(state => ({
-      field: '',
-      stocks: state.stocks.concat(newStock)
-    }));
+    this.setState({
+      field: ''
+    });
   };
 
   deleteStock = (event: SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const stockID = parseInt(event.currentTarget.value, 10);
     this.socket.emit('Delete Stock', stockID);
-    this.remove(stockID);
-  };
-
-  // when received a broadcast of a stockID to remove
-  remove = (stockID: number) => {
-    const updatedStocks = this.state.stocks.filter(stock => stock.id !== stockID);
-    this.setState({ stocks: updatedStocks });
   };
 
   render() {

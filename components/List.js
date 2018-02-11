@@ -11,8 +11,8 @@ type Props = {
 const List = ({ stocks, deleteStock }: Props) => (
   <ul>
     {stocks.map(stock => (
-      <div>
-        <li key={stock.id}>{stock.value}</li>
+      <div key={stock.id}>
+        <li>{stock.value}</li>
         <button onClick={deleteStock} value={stock.id}>
           Delete
         </button>

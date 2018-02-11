@@ -13,7 +13,7 @@ const nextApp = next({ dev });
 const nextHandler = nextApp.getRequestHandler();
 
 // fake db for stocks
-const stocks = [];
+let stocks = [];
 
 io.on('connection', socket => {
   console.log('a user connected');
@@ -21,12 +21,12 @@ io.on('connection', socket => {
   // send to clients except sender about someone's newly added stock
   socket.on('Add Stock', stock => {
     stocks.push(stock);
-    socket.broadcast.emit('Add Stock', stock);
+    io.emit('Add Stock', stocks);
   });
 
   socket.on('Delete Stock', stockID => {
-    stocks.filter(stock => stock.id !== stockID);
-    socket.broadcast.emit('Delete Stock', stockID);
+    stocks = stocks.filter(stock => stock.id !== stockID);
+    io.emit('Delete Stock', stocks);
   });
 
   socket.on('disconnect', () => {
