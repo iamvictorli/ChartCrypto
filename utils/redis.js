@@ -9,14 +9,14 @@ const zRemRangeByScoreAsync = promisify(client.zremrangebyscore).bind(client);
 
 export const addStock = (id, value) => zAddAsync('Stocks', id, value);
 export const deleteStock = stockID => zRemRangeByScoreAsync('Stocks', stockID, stockID);
-export const getAllStocks = () =>
-  zRangeAync('Stocks', 0, -1, 'WITHSCORES').then(stocksWithScores => {
-    const stocks = [];
-    for (let i = 0; i < stocksWithScores.length; i += 2) {
-      stocks.push({
-        id: Number(stocksWithScores[i + 1]),
-        value: stocksWithScores[i]
-      });
-    }
-    return stocks;
-  });
+export const getAllStocks = async () => {
+  const stocks = [];
+  const stocksWithScores = await zRangeAync('Stocks', 0, -1, 'WITHSCORES');
+  for (let i = 0; i < stocksWithScores.length; i += 2) {
+    stocks.push({
+      id: Number(stocksWithScores[i + 1]),
+      value: stocksWithScores[i]
+    });
+  }
+  return stocks;
+};
