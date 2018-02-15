@@ -4,13 +4,13 @@ import * as React from 'react';
 import type { Currency } from '../utils/custom-types';
 
 type Props = {
-  currencies: Array<Currency>,
+  userList: Array<Currency>,
   deleteStock: Function
 };
 
-const List = ({ currencies, deleteStock }: Props) => (
+const List = ({ userList, deleteStock }: Props) => (
   <ul>
-    {currencies.map(stock => (
+    {userList.map(stock => (
       <div key={stock.code}>
         <li>
           {stock.code}: {stock.name}

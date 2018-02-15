@@ -2,13 +2,16 @@
 
 import React from 'react';
 
+import type { Currency } from '../utils/custom-types';
+
 type Props = {
   handleChange: Function,
   handleSubmit: Function,
-  value: string
+  value: string,
+  currencyList: Array<Currency>
 };
 
-const Form = ({ handleChange, handleSubmit, value }: Props) => (
+const Form = ({ currencyList, handleChange, handleSubmit, value }: Props) => (
   <form onSubmit={handleSubmit}>
     <label htmlFor="stockName">
       Stock:

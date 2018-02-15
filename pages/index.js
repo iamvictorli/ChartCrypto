@@ -96,8 +96,9 @@ class HomePage extends React.Component<Props, State> {
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
           value={this.state.field}
+          currencyList={this.state.currencyList}
         />
-        <List currencies={this.state.userList} deleteStock={this.deleteStock} />
+        <List userList={this.state.userList} deleteStock={this.deleteStock} />
         <Graph />
       </div>
     );
