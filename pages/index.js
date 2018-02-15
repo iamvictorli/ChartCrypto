@@ -19,7 +19,8 @@ type Props = {
 type State = {
   field: string,
   currencyList: Array<Currency>,
-  userList: Array<Currency>
+  userList: Array<Currency>,
+  buttonDisable: boolean
 };
 
 class HomePage extends React.Component<Props, State> {
@@ -41,7 +42,8 @@ class HomePage extends React.Component<Props, State> {
   state = {
     field: '',
     currencyList: this.props.currencyList,
-    userList: this.props.userList
+    userList: this.props.userList,
+    buttonDisable: true
   };
 
   componentDidMount() {
@@ -64,7 +66,13 @@ class HomePage extends React.Component<Props, State> {
 
   // handle the change in the input field
   handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-    this.setState({ field: event.currentTarget.value });
+    const inputValue = event.currentTarget.value;
+    // return false to enable button
+    const disable = !this.searchCurrency(inputValue);
+    this.setState({
+      field: inputValue,
+      buttonDisable: disable
+    });
   };
 
   // submitting form event
@@ -82,6 +90,17 @@ class HomePage extends React.Component<Props, State> {
     });
   };
 
+  // see if inputValue has the correct values of one of the currencies
+  searchCurrency = (inputValue: String): boolean => {
+    const { currencyList } = this.state;
+
+    for (let i = 0; i < currencyList.length; i += 1) {
+      const string = `${currencyList[i].code}: ${currencyList[i].name}`;
+      if (string === inputValue) return true;
+    }
+    return false;
+  };
+
   deleteStock = (event: SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const stockID = parseInt(event.currentTarget.value, 10);
@@ -97,6 +116,7 @@ class HomePage extends React.Component<Props, State> {
           handleSubmit={this.handleSubmit}
           value={this.state.field}
           currencyList={this.state.currencyList}
+          buttonDisable={this.state.buttonDisable}
         />
         <List userList={this.state.userList} deleteStock={this.deleteStock} />
         <Graph />
