@@ -1,19 +1,21 @@
 // @flow
 
 import * as React from 'react';
-import type { Stock } from '../utils/custom-types';
+import type { Currency } from '../utils/custom-types';
 
 type Props = {
-  stocks: Array<Stock>,
+  currencies: Array<Currency>,
   deleteStock: Function
 };
 
-const List = ({ stocks, deleteStock }: Props) => (
+const List = ({ currencies, deleteStock }: Props) => (
   <ul>
-    {stocks.map(stock => (
-      <div key={stock.id}>
-        <li>{stock.value}</li>
-        <button onClick={deleteStock} value={stock.id}>
+    {currencies.map(stock => (
+      <div key={stock.code}>
+        <li>
+          {stock.code}: {stock.name}
+        </li>
+        <button onClick={deleteStock} value={stock.code}>
           Delete
         </button>
       </div>

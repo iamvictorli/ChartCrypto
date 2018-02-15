@@ -2,8 +2,15 @@ import express from 'express';
 import http from 'http';
 import socketIO from 'socket.io';
 import next from 'next';
+import csv from 'fast-csv';
 
-import { addStock, deleteStock, getAllStocks } from '../utils/redis';
+import {
+  addStock,
+  deleteStock,
+  getAllStocks,
+  getCurrencyList,
+  setupCurrencyList
+} from '../utils/redis';
 
 const app = express();
 const server = http.Server(app);
@@ -35,16 +42,26 @@ io.on('connection', socket => {
   });
 });
 
-nextApp.prepare().then(() => {
-  app.get('/stocks', async (req, res) => {
-    const stocks = await getAllStocks();
-    res.json(stocks);
-  });
+// start application after adding all the values from the digital_currency_list
+const csvStream = csv
+  .fromPath('./digital_currency_list.csv', { headers: true })
+  .on('data', async data => {
+    csvStream.pause();
+    await setupCurrencyList(data['currency code'], data['currency name']);
+    csvStream.resume();
+  })
+  .on('end', () => {
+    nextApp.prepare().then(() => {
+      app.get('/currencies', async (req, res) => {
+        const currencyList = await getCurrencyList();
+        res.json(currencyList);
+      });
 
-  app.get('*', (req, res) => nextHandler(req, res));
+      app.get('*', (req, res) => nextHandler(req, res));
 
-  server.listen(port, err => {
-    if (err) throw err;
-    console.log(`Listening on port ${process.env.PORT}`);
+      server.listen(port, err => {
+        if (err) throw err;
+        console.log(`Listening on port ${process.env.PORT}`);
+      });
+    });
   });
-});

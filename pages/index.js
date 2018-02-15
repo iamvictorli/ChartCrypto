@@ -9,34 +9,34 @@ import Form from '../components/Form';
 import Graph from '../components/Graph';
 import List from '../components/List';
 
-import type { Stock } from '../utils/custom-types';
+import type { Currency } from '../utils/custom-types';
 
 type Props = {
-  stocks: Array<Stock>
+  currencies: Array<Currency>
 };
 
 type State = {
   field: string,
-  stocks: Array<Stock>
+  currencies: Array<Currency>
 };
 
 class HomePage extends React.Component<Props, State> {
   static async getInitialProps() {
     const port = process.env.PORT || 3000;
-    const response = await fetch(`http://localhost:${port}/stocks`);
-    const stocks = await response.json();
+    const response = await fetch(`http://localhost:${port}/currencies`);
+    const currencies = await response.json();
     return {
-      stocks
+      currencies
     };
   }
 
   static defaultProps = {
-    stocks: []
+    currencies: []
   };
 
   state = {
     field: '',
-    stocks: this.props.stocks
+    currencies: this.props.currencies
   };
 
   componentDidMount() {
@@ -53,8 +53,8 @@ class HomePage extends React.Component<Props, State> {
   }
 
   // changes the stock array for each broadcast
-  handleStocks = (receivedStock: Array<Stock>) => {
-    this.setState({ stocks: receivedStock });
+  handleStocks = (receivedStock: Array<Currency>) => {
+    this.setState({ currencies: receivedStock });
   };
 
   // handle the change in the input field
@@ -92,7 +92,7 @@ class HomePage extends React.Component<Props, State> {
           handleSubmit={this.handleSubmit}
           value={this.state.field}
         />
-        <List stocks={this.state.stocks} deleteStock={this.deleteStock} />
+        <List currencies={this.state.currencies} deleteStock={this.deleteStock} />
         <Graph />
       </div>
     );

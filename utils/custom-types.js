@@ -1,6 +1,6 @@
 // @flow
 
-export type Stock = {
-  id: number,
-  value: string
+export type Currency = {
+  code: string,
+  name: string
 };
