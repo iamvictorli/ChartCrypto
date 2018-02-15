@@ -9,6 +9,7 @@ import {
   deleteStock,
   getAllStocks,
   getCurrencyList,
+  getUserList,
   setupCurrencyList
 } from '../utils/redis';
 
@@ -54,7 +55,8 @@ const csvStream = csv
     nextApp.prepare().then(() => {
       app.get('/currencies', async (req, res) => {
         const currencyList = await getCurrencyList();
-        res.json(currencyList);
+        const userList = await getUserList();
+        res.json({ currencyList, userList });
       });
 
       app.get('*', (req, res) => nextHandler(req, res));

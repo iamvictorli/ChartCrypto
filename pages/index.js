@@ -12,31 +12,36 @@ import List from '../components/List';
 import type { Currency } from '../utils/custom-types';
 
 type Props = {
-  currencies: Array<Currency>
+  currencyList: Array<Currency>,
+  userList: Array<Currency>
 };
 
 type State = {
   field: string,
-  currencies: Array<Currency>
+  currencyList: Array<Currency>,
+  userList: Array<Currency>
 };
 
 class HomePage extends React.Component<Props, State> {
   static async getInitialProps() {
     const port = process.env.PORT || 3000;
     const response = await fetch(`http://localhost:${port}/currencies`);
-    const currencies = await response.json();
+    const { currencyList, userList } = await response.json();
     return {
-      currencies
+      currencyList,
+      userList
     };
   }
 
   static defaultProps = {
-    currencies: []
+    currencyList: [],
+    userList: []
   };
 
   state = {
     field: '',
-    currencies: this.props.currencies
+    currencyList: this.props.currencyList,
+    userList: this.props.userList
   };
 
   componentDidMount() {
@@ -92,7 +97,7 @@ class HomePage extends React.Component<Props, State> {
           handleSubmit={this.handleSubmit}
           value={this.state.field}
         />
-        <List currencies={this.state.currencies} deleteStock={this.deleteStock} />
+        <List currencies={this.state.userList} deleteStock={this.deleteStock} />
         <Graph />
       </div>
     );

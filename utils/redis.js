@@ -35,3 +35,13 @@ export const getCurrencyList = async () => {
   });
   return list;
 };
+export const getUserList = async () => {
+  const list = [];
+  const userList = await hGetAllAsync('userList');
+  // nothing in the userList at all
+  if (userList === null) return list;
+  Object.entries(userList).forEach(([key, value]) => {
+    list.push({ code: key, name: value });
+  });
+  return list;
+};
