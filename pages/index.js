@@ -48,27 +48,27 @@ class HomePage extends React.Component<Props, State> {
 
   componentDidMount() {
     this.socket = io();
-    this.socket.on('Add Stock', this.handleStocks);
+    this.socket.on('Add UserList', this.handleStocks);
     this.socket.on('Delete Stock', this.handleStocks);
   }
 
   componentWillUnmount() {
     // close socket
-    this.socket.off('Add Stock', this.handleStocks);
+    this.socket.off('Add UserList', this.handleStocks);
     this.socket.off('Delete Stock', this.handleStocks);
     this.socket.close();
   }
 
   // changes the stock array for each broadcast
-  handleStocks = (receivedStock: Array<Currency>) => {
-    this.setState({ currencies: receivedStock });
+  handleStocks = (userList: Array<Currency>) => {
+    this.setState({ userList });
   };
 
   // handle the change in the input field
   handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
     const inputValue = event.currentTarget.value;
     // return false to enable button
-    const disable = !this.searchCurrency(inputValue);
+    const disable = !this.searchCurrency(inputValue, this.state.currencyList);
     this.setState({
       field: inputValue,
       buttonDisable: disable
@@ -78,25 +78,27 @@ class HomePage extends React.Component<Props, State> {
   // submitting form event
   handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const newStock = {
-      id: new Date().getTime(),
-      value: this.state.field
-    };
-
-    // send to server to broadcast to other clients to add stock
-    this.socket.emit('Add Stock', newStock);
+    // save currency field
+    const currencyField = this.state.field;
     this.setState({
       field: ''
     });
+    if (this.searchCurrency(currencyField, this.state.userList)) return;
+
+    const newCurrency = {
+      code: currencyField.split(': ')[0],
+      name: currencyField.split(': ')[1]
+    };
+
+    // send to server to broadcast to other clients to add stock
+    this.socket.emit('Add UserList', newCurrency);
   };
 
-  // see if inputValue has the correct values of one of the currencies
-  searchCurrency = (inputValue: String): boolean => {
-    const { currencyList } = this.state;
-
-    for (let i = 0; i < currencyList.length; i += 1) {
-      const string = `${currencyList[i].code}: ${currencyList[i].name}`;
-      if (string === inputValue) return true;
+  // see if inputValue has the correct values of one of the lists
+  searchCurrency = (inputValue: string, list: Array<Currency>): boolean => {
+    for (let i = 0; i < list.length; i += 1) {
+      const formattedString = `${list[i].code}: ${list[i].name}`;
+      if (formattedString === inputValue) return true;
     }
     return false;
   };

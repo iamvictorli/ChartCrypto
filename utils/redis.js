@@ -23,24 +23,15 @@ export const getAllStocks = async () => {
   return stocks;
 };
 
-export const setupCurrencyList = (currencyCode, currencyName) =>
-  hSetAsync('currencyList', currencyCode, currencyName);
-export const getCurrencyList = async () => {
+export const setToList = (list, currencyCode, currencyName) =>
+  hSetAsync(list, currencyCode, currencyName);
+export const getList = async listName => {
   // hGetAll returns a huge object with key and values
   // need to make array of objects
   const list = [];
-  const currencyList = await hGetAllAsync('currencyList');
-  Object.entries(currencyList).forEach(([key, value]) => {
-    list.push({ code: key, name: value });
-  });
-  return list;
-};
-export const getUserList = async () => {
-  const list = [];
-  const userList = await hGetAllAsync('userList');
-  // nothing in the userList at all
-  if (userList === null) return list;
-  Object.entries(userList).forEach(([key, value]) => {
+  const currencyObject = await hGetAllAsync(listName);
+  if (currencyObject === null) return list;
+  Object.entries(currencyObject).forEach(([key, value]) => {
     list.push({ code: key, name: value });
   });
   return list;

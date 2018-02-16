@@ -4,14 +4,7 @@ import socketIO from 'socket.io';
 import next from 'next';
 import csv from 'fast-csv';
 
-import {
-  addStock,
-  deleteStock,
-  getAllStocks,
-  getCurrencyList,
-  getUserList,
-  setupCurrencyList
-} from '../utils/redis';
+import { addStock, deleteStock, getAllStocks, getList, setToList } from '../utils/redis';
 
 const app = express();
 const server = http.Server(app);
@@ -25,11 +18,11 @@ const nextHandler = nextApp.getRequestHandler();
 io.on('connection', socket => {
   console.log('a user connected');
 
-  // send to clients except sender about someone's newly added stock
-  socket.on('Add Stock', async stock => {
-    await addStock(stock.id, stock.value);
-    const stocks = await getAllStocks();
-    io.emit('Add Stock', stocks);
+  // send to all clients the user list
+  socket.on('Add UserList', async currency => {
+    await setToList('userList', currency.code, currency.name);
+    const userList = await getList('userList');
+    io.emit('Add UserList', userList);
   });
 
   socket.on('Delete Stock', async stockID => {
@@ -48,14 +41,14 @@ const csvStream = csv
   .fromPath('./digital_currency_list.csv', { headers: true })
   .on('data', async data => {
     csvStream.pause();
-    await setupCurrencyList(data['currency code'], data['currency name']);
+    await setToList('currencyList', data['currency code'], data['currency name']);
     csvStream.resume();
   })
   .on('end', () => {
     nextApp.prepare().then(() => {
       app.get('/currencies', async (req, res) => {
-        const currencyList = await getCurrencyList();
-        const userList = await getUserList();
+        const currencyList = await getList('currencyList');
+        const userList = await getList('userList');
         res.json({ currencyList, userList });
       });
 
