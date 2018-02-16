@@ -4,12 +4,13 @@ import * as React from 'react';
 import io from 'socket.io-client';
 import fetch from 'isomorphic-fetch';
 
+import type { Socket } from 'socket.io-client';
+import type { Currency } from '../utils/custom-types';
+
 import Header from '../components/Header';
 import Form from '../components/Form';
 import Graph from '../components/Graph';
 import List from '../components/List';
-
-import type { Currency } from '../utils/custom-types';
 
 type Props = {
   currencyList: Array<Currency>,
@@ -49,6 +50,7 @@ class HomePage extends React.Component<Props, State> {
   componentDidMount() {
     this.socket = io();
     this.socket.on('Add UserList', this.handleStocks);
+    // $FlowFixMe
     this.socket.on('Delete UserList', this.handleStocks);
   }
 
@@ -58,6 +60,8 @@ class HomePage extends React.Component<Props, State> {
     this.socket.off('Delete UserList', this.handleStocks);
     this.socket.close();
   }
+
+  socket: Socket;
 
   // changes the stock array for each broadcast
   handleStocks = (userList: Array<Currency>) => {
