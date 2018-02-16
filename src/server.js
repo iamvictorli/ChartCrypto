@@ -4,7 +4,7 @@ import socketIO from 'socket.io';
 import next from 'next';
 import csv from 'fast-csv';
 
-import { addStock, deleteStock, getAllStocks, getList, setToList } from '../utils/redis';
+import { deleteFromList, getList, setToList } from '../utils/redis';
 
 const app = express();
 const server = http.Server(app);
@@ -25,10 +25,10 @@ io.on('connection', socket => {
     io.emit('Add UserList', userList);
   });
 
-  socket.on('Delete Stock', async stockID => {
-    await deleteStock(stockID);
-    const stocks = await getAllStocks();
-    io.emit('Delete Stock', stocks);
+  socket.on('Delete UserList', async currencyCode => {
+    await deleteFromList('userList', currencyCode);
+    const userList = await getList('userList');
+    io.emit('Delete UserList', userList);
   });
 
   socket.on('disconnect', () => {

@@ -49,13 +49,13 @@ class HomePage extends React.Component<Props, State> {
   componentDidMount() {
     this.socket = io();
     this.socket.on('Add UserList', this.handleStocks);
-    this.socket.on('Delete Stock', this.handleStocks);
+    this.socket.on('Delete UserList', this.handleStocks);
   }
 
   componentWillUnmount() {
     // close socket
     this.socket.off('Add UserList', this.handleStocks);
-    this.socket.off('Delete Stock', this.handleStocks);
+    this.socket.off('Delete UserList', this.handleStocks);
     this.socket.close();
   }
 
@@ -68,7 +68,7 @@ class HomePage extends React.Component<Props, State> {
   handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
     const inputValue = event.currentTarget.value;
     // return false to enable button
-    const disable = !this.searchCurrency(inputValue, this.state.currencyList);
+    const disable = !this.searchCurrency(inputValue, this.state.currencyList, true);
     this.setState({
       field: inputValue,
       buttonDisable: disable
@@ -78,41 +78,45 @@ class HomePage extends React.Component<Props, State> {
   // submitting form event
   handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // save currency field
+    // if the existed field does not exist in user list, then add to user list
     const currencyField = this.state.field;
+    if (!this.searchCurrency(currencyField, this.state.userList, true)) {
+      const newCurrency = {
+        code: currencyField.split(': ')[0],
+        name: currencyField.split(': ')[1]
+      };
+
+      // send to server to broadcast to other clients to add to userList
+      this.socket.emit('Add UserList', newCurrency);
+    }
+
     this.setState({
-      field: ''
+      field: '',
+      buttonDisable: true
     });
-    if (this.searchCurrency(currencyField, this.state.userList)) return;
-
-    const newCurrency = {
-      code: currencyField.split(': ')[0],
-      name: currencyField.split(': ')[1]
-    };
-
-    // send to server to broadcast to other clients to add stock
-    this.socket.emit('Add UserList', newCurrency);
   };
 
-  // see if inputValue has the correct values of one of the lists
-  searchCurrency = (inputValue: string, list: Array<Currency>): boolean => {
+  // see if value is in the list.
+  // Full Format true compares the code and name. false, does not
+  searchCurrency = (value: string, list: Array<Currency>, fullFormat: boolean): boolean => {
     for (let i = 0; i < list.length; i += 1) {
-      const formattedString = `${list[i].code}: ${list[i].name}`;
-      if (formattedString === inputValue) return true;
+      const formattedString = fullFormat ? `${list[i].code}: ${list[i].name}` : list[i].code;
+      if (formattedString === value) return true;
     }
     return false;
   };
 
   deleteStock = (event: SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const stockID = parseInt(event.currentTarget.value, 10);
-    this.socket.emit('Delete Stock', stockID);
+    const currencyCode = event.currentTarget.value;
+    if (!this.searchCurrency(currencyCode, this.state.userList, false)) return;
+    this.socket.emit('Delete UserList', currencyCode);
   };
 
   render() {
     return (
       <div>
-        <Header name="StockLi" />
+        <Header name="CryptoCurrency Chart" />
         <Form
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
