@@ -1,7 +1,7 @@
 import redis from 'redis';
 import { promisify } from 'util';
 
-const client = redis.createClient();
+const client = redis.createClient(process.env.REDIS_URL);
 client.on('connect', () => console.log('Connected to Redis'));
 const hSetAsync = promisify(client.hset).bind(client);
 const hGetAllAsync = promisify(client.hgetall).bind(client);
