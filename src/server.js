@@ -5,6 +5,7 @@ import http from 'http';
 import socketIO from 'socket.io';
 import next from 'next';
 import csv from 'fast-csv';
+import fetch from 'isomorphic-fetch';
 
 import { deleteFromList, getList, setToList } from '../utils/redis';
 
@@ -24,6 +25,12 @@ io.on('connection', socket => {
   // send to all clients the user list
   socket.on('Add UserList', async currency => {
     await setToList('userList', currency.code, currency.name);
+    let response = await fetch(
+      `https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${
+        currency.code
+      }&market=USD&apikey=${process.env.ALPHA_VANTAGE_API_KEY}`
+    );
+    response = await response.json();
     const userList = await getList('userList');
     io.emit('Add UserList', userList);
   });
