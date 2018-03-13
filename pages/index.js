@@ -13,13 +13,13 @@ import Graph from '../components/Graph';
 import List from '../components/List';
 
 type Props = {
-  currencyList: Array<Currency>,
+  currencyList: Array<string>,
   userList: Array<Currency>
 };
 
 type State = {
   field: string,
-  currencyList: Array<Currency>,
+  currencyList: Array<string>,
   userList: Array<Currency>,
   buttonDisable: boolean
 };
@@ -72,7 +72,7 @@ class HomePage extends React.Component<Props, State> {
   handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
     const inputValue = event.currentTarget.value;
     // return false to enable button
-    const disable = !this.searchCurrency(inputValue, this.state.currencyList, true);
+    const disable = !this.searchCurrencyList(inputValue, this.state.currencyList);
     this.setState({
       field: inputValue,
       buttonDisable: disable
@@ -84,14 +84,9 @@ class HomePage extends React.Component<Props, State> {
     event.preventDefault();
     // if the existed field does not exist in user list, then add to user list
     const currencyField = this.state.field;
-    if (!this.searchCurrency(currencyField, this.state.userList, true)) {
-      const newCurrency = {
-        code: currencyField.split(': ')[0],
-        name: currencyField.split(': ')[1]
-      };
-
+    if (!this.searchUserList(currencyField, this.state.userList)) {
       // send to server to broadcast to other clients to add to userList
-      this.socket.emit('Add UserList', newCurrency);
+      this.socket.emit('Add UserList', currencyField);
     }
 
     this.setState({
@@ -100,20 +95,16 @@ class HomePage extends React.Component<Props, State> {
     });
   };
 
-  // see if value is in the list.
-  // Full Format true compares the code and name. false, does not
-  searchCurrency = (value: string, list: Array<Currency>, fullFormat: boolean): boolean => {
-    for (let i = 0; i < list.length; i += 1) {
-      const formattedString = fullFormat ? `${list[i].code}: ${list[i].name}` : list[i].code;
-      if (formattedString === value) return true;
-    }
-    return false;
-  };
+  searchCurrencyList = (value: string, currencyList: Array<string>): boolean =>
+    currencyList.some(currency => currency === value);
+
+  searchUserList = (value: string, userList: Array<Currency>): boolean =>
+    userList.some(userCurrency => userCurrency.title === value);
 
   deleteStock = (event: SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const currencyCode = event.currentTarget.value;
-    if (!this.searchCurrency(currencyCode, this.state.userList, false)) return;
+    if (!this.searchUserList(currencyCode, this.state.userList)) return;
     this.socket.emit('Delete UserList', currencyCode);
   };
 

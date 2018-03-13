@@ -10,12 +10,10 @@ type Props = {
 
 const List = ({ userList, deleteStock }: Props) => (
   <ul>
-    {userList.map(stock => (
-      <div key={stock.code}>
-        <li>
-          {stock.code}: {stock.name}
-        </li>
-        <button onClick={deleteStock} value={stock.code}>
+    {userList.map(currency => (
+      <div key={currency.title}>
+        <li>{currency.title}</li>
+        <button onClick={deleteStock} value={currency.title}>
           Delete
         </button>
       </div>

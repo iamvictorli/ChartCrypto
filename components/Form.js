@@ -2,13 +2,11 @@
 
 import React from 'react';
 
-import type { Currency } from '../utils/custom-types';
-
 type Props = {
   handleChange: Function,
   handleSubmit: Function,
   value: string,
-  currencyList: Array<Currency>,
+  currencyList: Array<string>,
   buttonDisable: boolean
 };
 
@@ -25,9 +23,7 @@ const Form = ({ currencyList, handleChange, handleSubmit, value, buttonDisable }
       />
     </label>
     <datalist id="cryptocurrencies">
-      {currencyList.map(currency => (
-        <option key={currency.code} value={`${currency.code}: ${currency.name}`} />
-      ))}
+      {currencyList.map(currency => <option key={currency} value={currency} />)}
     </datalist>
 
     <button disabled={buttonDisable}>Send</button>

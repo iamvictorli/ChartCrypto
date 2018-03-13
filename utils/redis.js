@@ -9,20 +9,27 @@ const hSetAsync = promisify(client.hset).bind(client);
 const hGetAllAsync = promisify(client.hgetall).bind(client);
 const hDelAsync = promisify(client.hdel).bind(client);
 
-export const setToList = (list: string, currencyCode: string, currencyName: string) =>
-  hSetAsync(list, currencyCode, currencyName);
-export const getList = async (listName: string) => {
+const sAddAsync = promisify(client.sadd).bind(client);
+const sMembersAsync = promisify(client.smembers).bind(client);
+
+export const setUserList = (currencyTitle: string, currencyMetaData: string) =>
+  hSetAsync('userList', currencyTitle, currencyMetaData);
+
+export const getUserList = async () => {
   // hGetAll returns a huge object with key and values
   // need to make array of objects
   const list = [];
-  const currencyObject = await hGetAllAsync((listName: string));
+  const currencyObject = await hGetAllAsync('userList');
   if (currencyObject === null) return list;
-  Object.entries(currencyObject).forEach(([key, value]) => {
-    list.push({ code: key, name: value });
+  Object.entries(currencyObject).forEach(([title, metaData]) => {
+    list.push({ title, metaData });
   });
   return list;
 };
 
-export const deleteFromList = (list: string, currencyCode: string) => {
-  hDelAsync(list, currencyCode);
+export const deleteUserList = (currencyTitle: string) => {
+  hDelAsync('userList', currencyTitle);
 };
+
+export const populateCurrencyList = (currency: string) => sAddAsync('currencyList', currency);
+export const getCurrencyList = () => sMembersAsync('currencyList');

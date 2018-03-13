@@ -1,6 +1,6 @@
 // @flow
 
 export type Currency = {
-  code: string,
-  name: string
+  title: string,
+  metaData: string
 };
