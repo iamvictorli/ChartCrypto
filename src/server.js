@@ -30,11 +30,8 @@ io.on('connection', socket => {
   // send to all clients the user list
   socket.on('Add UserList', async currency => {
     const code = currency.split(':')[0];
-    let response = await fetch(
-      `https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${code}&market=USD&apikey=${
-        process.env.ALPHA_VANTAGE_API_KEY
-      }`
-    );
+    let response = await fetch(`https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${code}&market=USD&apikey=
+      ${process.env.ALPHA_VANTAGE_API_KEY || 'redis://localhost:6379'}`);
     response = await response.json();
     await setUserList(currency, JSON.stringify(response));
     const userList = await getUserList();

@@ -15,6 +15,7 @@ import {
 } from 'recharts';
 import randomColor from 'randomcolor';
 import isEqual from 'lodash.isequal';
+import moment from 'moment';
 import type { Currency } from '../utils/custom-types';
 
 type Props = {
@@ -28,12 +29,11 @@ class Graph extends React.Component<Props> {
 
   render() {
     const list = this.props.userList.map(currency => JSON.parse(currency.metaData));
-
     let data = {};
     list.forEach(currency => {
       const currencyName = currency['Meta Data']['2. Digital Currency Code'];
       Object.entries(currency['Time Series (Digital Currency Daily)']).forEach(entry => {
-        const date = entry[0];
+        const date = new Date(entry[0]).valueOf();
         const price = Number(entry[1]['1a. open (USD)']);
         if (Object.prototype.hasOwnProperty.call(data, date)) {
           data[date].push({ [currencyName]: price });
@@ -46,7 +46,7 @@ class Graph extends React.Component<Props> {
     data = Object.entries(data)
       .map(entry => {
         const obj = {
-          date: entry[0]
+          date: Number(entry[0])
         };
         entry[1].forEach(currency => {
           Object.entries(currency).forEach(currencyInfo => {
@@ -75,7 +75,14 @@ class Graph extends React.Component<Props> {
             }}
           >
             <CartesianGrid vertical={false} />
-            <XAxis dataKey="date" />
+            <XAxis
+              type="number"
+              dataKey="date"
+              domain={['dataMin', 'dataMax']}
+              tickFormatter={date => moment(date).format('MM[/]DD[/]YY')}
+              interval={0}
+              tickCount={8}
+            />
             <YAxis
               domain={['auto', 'auto']}
               label={{
@@ -84,7 +91,7 @@ class Graph extends React.Component<Props> {
                 position: 'left'
               }}
             />
-            <Tooltip />
+            <Tooltip labelFormatter={date => moment(date).format('MM[/]DD[/]YY')} />
             <Legend />
             {list.map((currency, index) => (
               <Line
@@ -96,9 +103,12 @@ class Graph extends React.Component<Props> {
                 stroke={colors[index]}
               />
             ))}
-            <Brush dataKey="date" startIndex={data.length - 90}>
+            <Brush
+              dataKey="date"
+              startIndex={data.length - 90}
+              tickFormatter={date => moment(date).format('MM[/]DD[/]YY')}
+            >
               <AreaChart>
-                <YAxis hide domain={['auto', 'auto']} />
                 {list.map((currency, index) => (
                   <Area
                     key={currency['Meta Data']['2. Digital Currency Code']}
