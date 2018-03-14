@@ -120,7 +120,7 @@ class HomePage extends React.Component<Props, State> {
           buttonDisable={this.state.buttonDisable}
         />
         <List userList={this.state.userList} deleteStock={this.deleteStock} />
-        <Graph />
+        <Graph userList={this.state.userList} />
       </div>
     );
   }
