@@ -28,6 +28,7 @@
     "fast-csv": "^2.4.1",
     "flow-bin": "^0.65.0",
     "isomorphic-fetch": "^2.2.1",
+    "lodash.isequal": "^4.5.0",
     "next": "^4.2.3",
     "randomcolor": "^0.5.3",
     "react": "^16.2.0",

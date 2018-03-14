@@ -50,7 +50,6 @@ class HomePage extends React.Component<Props, State> {
   componentDidMount() {
     this.socket = io();
     this.socket.on('Add UserList', this.handleStocks);
-    // $FlowFixMe
     this.socket.on('Delete UserList', this.handleStocks);
   }
 
