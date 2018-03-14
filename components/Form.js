@@ -13,7 +13,7 @@ type Props = {
 const Form = ({
   currencyList, handleChange, handleSubmit, value, buttonDisable }:
   Props) => (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={{ marginTop: '64px'}}>
       <label htmlFor="currencyList">
         Choose a CryptoCurrency from this list:
         <input

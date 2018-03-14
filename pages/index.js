@@ -3,6 +3,11 @@
 import * as React from 'react';
 import io from 'socket.io-client';
 import fetch from 'isomorphic-fetch';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import { lightBlue500, lightBlue700 } from 'material-ui/styles/colors';
+import Head from 'next/head';
 
 import type { Socket } from 'socket.io-client';
 import type { Currency } from '../utils/custom-types';
@@ -14,7 +19,8 @@ import List from '../components/List';
 
 type Props = {
   currencyList: Array<string>,
-  userList: Array<Currency>
+  userList: Array<Currency>,
+  userAgent: string
 };
 
 type State = {
@@ -25,13 +31,20 @@ type State = {
 };
 
 class HomePage extends React.Component<Props, State> {
-  static async getInitialProps() {
+  static async getInitialProps({ req }) {
     const port = process.env.PORT || 3000;
     const response = await fetch(`http://localhost:${port}/currencies`);
     const { currencyList, userList } = await response.json();
+    let userAgent;
+    if (process.browser) {
+      userAgent = navigator.userAgent;
+    } else {
+      userAgent = req.headers['user-agent'];
+    }
     return {
       currencyList,
-      userList
+      userList,
+      userAgent
     };
   }
 
@@ -108,18 +121,41 @@ class HomePage extends React.Component<Props, State> {
   };
 
   render() {
+    const theme = getMuiTheme({
+      userAgent: this.props.userAgent,
+      muiTheme: {
+        ...lightBaseTheme,
+        palette: {
+          primary1Color: lightBlue500,
+          pickerHeaderColor: lightBlue500,
+          primary2Color: lightBlue700
+        }
+      }
+    });
     return (
       <div>
-        <Header name="CryptoCurrency Chart" />
-        <Form
-          handleChange={this.handleChange}
-          handleSubmit={this.handleSubmit}
-          value={this.state.field}
-          currencyList={this.state.currencyList}
-          buttonDisable={this.state.buttonDisable}
-        />
-        <List userList={this.state.userList} deleteStock={this.deleteStock} />
-        <Graph userList={this.state.userList} />
+        <Head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <style>{`body { margin: 0;
+            font-family: Roboto, sans-serif;
+           }`}</style>
+        </Head>
+
+        <MuiThemeProvider muiTheme={theme}>
+          <div>
+            <Header name="CryptoCurrency Chart" />
+            <Form
+              handleChange={this.handleChange}
+              handleSubmit={this.handleSubmit}
+              value={this.state.field}
+              currencyList={this.state.currencyList}
+              buttonDisable={this.state.buttonDisable}
+            />
+            <List userList={this.state.userList} deleteStock={this.deleteStock} />
+            <Graph userList={this.state.userList} />
+          </div>
+        </MuiThemeProvider>
       </div>
     );
   }
