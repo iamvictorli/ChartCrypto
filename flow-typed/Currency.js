@@ -1,6 +1,6 @@
 // @flow
 
-export type Currency = {
+declare type Currency = {
   title: string,
   metaData: string
 };

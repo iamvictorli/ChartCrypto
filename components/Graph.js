@@ -15,7 +15,6 @@ import {
 } from 'recharts';
 import isEqual from 'lodash.isequal';
 import moment from 'moment';
-import type { Currency } from '../utils/custom-types';
 
 type Props = {
   userList: Array<Currency>,

@@ -3,7 +3,6 @@
 import * as React from 'react';
 import Chip from 'material-ui/Chip';
 import isEqual from 'lodash.isequal';
-import type { Currency } from '../utils/custom-types';
 
 type Props = {
   userList: Array<Currency>,

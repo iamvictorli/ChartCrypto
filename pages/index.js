@@ -8,9 +8,6 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Head from 'next/head';
 import randomColor from 'randomcolor';
 
-import type { Socket } from 'socket.io-client';
-import type { Currency } from '../utils/custom-types';
-
 import Header from '../components/Header';
 import Form from '../components/Form';
 import Graph from '../components/Graph';
