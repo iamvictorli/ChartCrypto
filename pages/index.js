@@ -4,9 +4,7 @@ import * as React from 'react';
 import io from 'socket.io-client';
 import fetch from 'isomorphic-fetch';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import { lightBlue500, lightBlue700 } from 'material-ui/styles/colors';
 import Head from 'next/head';
 
 import type { Socket } from 'socket.io-client';
@@ -24,10 +22,9 @@ type Props = {
 };
 
 type State = {
-  field: string,
+  value: string,
   currencyList: Array<string>,
-  userList: Array<Currency>,
-  buttonDisable: boolean
+  userList: Array<Currency>
 };
 
 class HomePage extends React.Component<Props, State> {
@@ -54,10 +51,9 @@ class HomePage extends React.Component<Props, State> {
   };
 
   state = {
-    field: '',
-    currencyList: this.props.currencyList,
-    userList: this.props.userList,
-    buttonDisable: true
+    value: 'BTC: Bitcoin',
+    currencyList: this.props.currencyList.sort(),
+    userList: this.props.userList
   };
 
   componentDidMount() {
@@ -81,76 +77,60 @@ class HomePage extends React.Component<Props, State> {
   };
 
   // handle the change in the input field
-  handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-    const inputValue = event.currentTarget.value;
-    // return false to enable button
-    const disable = !this.searchCurrencyList(inputValue, this.state.currencyList);
+  handleChange = (event, index, value) => {
     this.setState({
-      field: inputValue,
-      buttonDisable: disable
+      value
     });
   };
 
-  // submitting form event
-  handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  // on click button
+  buttonClick = () => {
     // if the existed field does not exist in user list, then add to user list
-    const currencyField = this.state.field;
-    if (!this.searchUserList(currencyField, this.state.userList)) {
+    const currencyField = this.state.value;
+    if (!this.searchUserList(currencyField)) {
       // send to server to broadcast to other clients to add to userList
       this.socket.emit('Add UserList', currencyField);
     }
-
-    this.setState({
-      field: '',
-      buttonDisable: true
-    });
   };
 
-  searchCurrencyList = (value: string, currencyList: Array<string>): boolean =>
-    currencyList.some(currency => currency === value);
+  searchCurrencyList = (value: string): boolean =>
+    this.state.currencyList.some(currency => currency === value);
 
-  searchUserList = (value: string, userList: Array<Currency>): boolean =>
-    userList.some(userCurrency => userCurrency.title === value);
+  searchUserList = (value: string): boolean =>
+    this.state.userList.some(userCurrency => userCurrency.title === value);
 
   deleteStock = (event: SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const currencyCode = event.currentTarget.value;
-    if (!this.searchUserList(currencyCode, this.state.userList)) return;
+    if (!this.searchUserList(currencyCode)) return;
     this.socket.emit('Delete UserList', currencyCode);
   };
 
   render() {
-    const theme = getMuiTheme({
-      userAgent: this.props.userAgent,
-      muiTheme: {
-        ...lightBaseTheme,
-        palette: {
-          primary1Color: lightBlue500,
-          pickerHeaderColor: lightBlue500,
-          primary2Color: lightBlue700
-        }
-      }
-    });
+    const { userAgent } = this.props;
+    const buttonDisable = this.searchUserList(this.state.value);
+
     return (
       <div>
         <Head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <style>{`body { margin: 0;
-            font-family: Roboto, sans-serif;
-           }`}</style>
+          <style>
+            {`body { margin: 0;
+              font-family: Roboto, sans-serif;
+            }`}
+          </style>
         </Head>
 
-        <MuiThemeProvider muiTheme={theme}>
+        <MuiThemeProvider muiTheme={getMuiTheme({ userAgent })}>
           <div>
             <Header name="CryptoCurrency Chart" />
             <Form
               handleChange={this.handleChange}
-              handleSubmit={this.handleSubmit}
-              value={this.state.field}
+              buttonClick={this.buttonClick}
+              value={this.state.value}
               currencyList={this.state.currencyList}
-              buttonDisable={this.state.buttonDisable}
+              buttonDisable={buttonDisable}
             />
             <List userList={this.state.userList} deleteStock={this.deleteStock} />
             <Graph userList={this.state.userList} />
