@@ -28,6 +28,14 @@ class Graph extends React.Component<Props> {
   }
 
   render() {
+    if (this.props.userList.length === 0) {
+      return (
+        <h1 style={{ marginLeft: '24px' }}>
+          Add a CryptoCurrency from the list and see an awesome graph!
+        </h1>
+      );
+    }
+
     const list = this.props.userList.map(currency => JSON.parse(currency.metaData));
     let data = {};
     list.forEach(currency => {
