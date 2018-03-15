@@ -6,6 +6,7 @@ import fetch from 'isomorphic-fetch';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Head from 'next/head';
+import randomColor from 'randomcolor';
 
 import type { Socket } from 'socket.io-client';
 import type { Currency } from '../utils/custom-types';
@@ -22,7 +23,7 @@ type Props = {
 };
 
 type State = {
-  value: string,
+  fieldValue: string,
   currencyList: Array<string>,
   userList: Array<Currency>
 };
@@ -51,7 +52,7 @@ class HomePage extends React.Component<Props, State> {
   };
 
   state = {
-    value: 'BTC: Bitcoin',
+    fieldValue: 'BTC: Bitcoin',
     currencyList: this.props.currencyList.sort(),
     userList: this.props.userList
   };
@@ -77,16 +78,16 @@ class HomePage extends React.Component<Props, State> {
   };
 
   // handle the change in the input field
-  handleChange = (event, index, value) => {
+  handleChange = (event, index: number, fieldValue: string) => {
     this.setState({
-      value
+      fieldValue
     });
   };
 
   // on click button
   buttonClick = () => {
     // if the existed field does not exist in user list, then add to user list
-    const currencyField = this.state.value;
+    const currencyField = this.state.fieldValue;
     if (!this.searchUserList(currencyField)) {
       // send to server to broadcast to other clients to add to userList
       this.socket.emit('Add UserList', currencyField);
@@ -99,16 +100,15 @@ class HomePage extends React.Component<Props, State> {
   searchUserList = (value: string): boolean =>
     this.state.userList.some(userCurrency => userCurrency.title === value);
 
-  deleteStock = (event: SyntheticEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    const currencyCode = event.currentTarget.value;
-    if (!this.searchUserList(currencyCode)) return;
-    this.socket.emit('Delete UserList', currencyCode);
+  deleteStock = (currencyName: string) => {
+    if (!this.searchUserList(currencyName)) return;
+    this.socket.emit('Delete UserList', currencyName);
   };
 
   render() {
     const { userAgent } = this.props;
-    const buttonDisable = this.searchUserList(this.state.value);
+    const buttonDisable = this.searchUserList(this.state.fieldValue);
+    const colors = randomColor({ count: this.state.userList.length });
 
     return (
       <div>
@@ -128,12 +128,12 @@ class HomePage extends React.Component<Props, State> {
             <Form
               handleChange={this.handleChange}
               buttonClick={this.buttonClick}
-              value={this.state.value}
+              fieldValue={this.state.fieldValue}
               currencyList={this.state.currencyList}
               buttonDisable={buttonDisable}
             />
-            <List userList={this.state.userList} deleteStock={this.deleteStock} />
-            <Graph userList={this.state.userList} />
+            <List userList={this.state.userList} deleteStock={this.deleteStock} colors={colors} />
+            <Graph userList={this.state.userList} colors={colors} />
           </div>
         </MuiThemeProvider>
       </div>

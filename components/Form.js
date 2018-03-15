@@ -8,19 +8,19 @@ import FlatButton from 'material-ui/FlatButton';
 type Props = {
   handleChange: Function,
   buttonClick: Function,
-  value: string,
+  fieldValue: string,
   currencyList: Array<string>,
   buttonDisable: boolean
 };
 
-const Form = ({ currencyList, handleChange, buttonClick, value, buttonDisable }: Props) => (
+const Form = ({ currencyList, handleChange, buttonClick, fieldValue, buttonDisable }: Props) => (
   <div style={{ marginTop: '80px', marginLeft: '32px', display: 'flex' }}>
     <SelectField
       id="currencyList"
       name="currencyList"
       maxHeight={300}
       onChange={handleChange}
-      value={value}
+      value={fieldValue}
     >
       {currencyList.map(currency => (
         <MenuItem key={currency} value={currency} primaryText={currency} />

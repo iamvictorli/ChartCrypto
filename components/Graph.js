@@ -13,13 +13,13 @@ import {
   AreaChart,
   Area
 } from 'recharts';
-import randomColor from 'randomcolor';
 import isEqual from 'lodash.isequal';
 import moment from 'moment';
 import type { Currency } from '../utils/custom-types';
 
 type Props = {
-  userList: Array<Currency>
+  userList: Array<Currency>,
+  colors: Array<string>
 };
 
 class Graph extends React.Component<Props> {
@@ -58,13 +58,11 @@ class Graph extends React.Component<Props> {
       })
       .reverse();
 
-    const colors = randomColor({ count: list.length });
-
     return (
-      <div className="line-charts">
+      <div className="line-charts" style={{ marginLeft: '24px' }}>
         <div className="line-chart-wrapper">
           <LineChart
-            width={1000}
+            width={800}
             height={500}
             data={data}
             margin={{
@@ -100,7 +98,7 @@ class Graph extends React.Component<Props> {
                 type="monotone"
                 dot={false}
                 connectNulls
-                stroke={colors[index]}
+                stroke={this.props.colors[index]}
               />
             ))}
             <Brush
@@ -113,8 +111,8 @@ class Graph extends React.Component<Props> {
                   <Area
                     key={currency['Meta Data']['2. Digital Currency Code']}
                     dataKey={currency['Meta Data']['2. Digital Currency Code']}
-                    stroke={colors[index]}
-                    fill={colors[index]}
+                    stroke={this.props.colors[index]}
+                    fill={this.props.colors[index]}
                     dot={false}
                   />
                 ))}
