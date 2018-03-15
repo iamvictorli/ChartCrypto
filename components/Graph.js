@@ -12,6 +12,7 @@ import {
   Brush,
   AreaChart,
   Area
+  // $FlowFixMe
 } from 'recharts';
 import isEqual from 'lodash.isequal';
 import moment from 'moment';

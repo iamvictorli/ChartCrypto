@@ -1,0 +1,6 @@
+declare module 'randomcolor' {
+  declare type options = {
+    count: number
+  }
+  declare export default (options: options) => Array<string>;
+}

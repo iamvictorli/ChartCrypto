@@ -158,6 +158,8 @@ declare module "redis" {
     duplicateAsync: () => Promise<RedisClientPromisified>;
     endAsync: (flush: boolean) => Promise<void>;
     quitAsync: () => Promise<void>;
+    saddAsync: (key: string, value: string) => Promise<number>;
+    smembersAsync: (key: string) => Promise<Array<?string>>;
   }
 
   declare type CreateOptions = {
@@ -203,6 +205,7 @@ declare module "redis" {
   declare module.exports: {
     RedisClient: typeof RedisClient,
     RedisClientPromisified: typeof RedisClientPromisified,
-    createClient: CreateClient
+    createClient: CreateClient,
+    Multi: any
   };
 }

@@ -16,6 +16,7 @@ import {
 } from '../utils/redis';
 
 const app = express();
+// $FlowFixMe
 const server = http.Server(app);
 const io = socketIO(server);
 const port = parseInt(process.env.PORT, 10) || 3000;

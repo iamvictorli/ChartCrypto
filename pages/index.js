@@ -26,20 +26,14 @@ type State = {
 };
 
 class HomePage extends React.Component<Props, State> {
-  static async getInitialProps({ req }) {
+  static async getInitialProps({ req }: any) {
     const port = process.env.PORT || 3000;
     const response = await fetch(`http://localhost:${port}/currencies`);
     const { currencyList, userList } = await response.json();
-    let userAgent;
-    if (process.browser) {
-      userAgent = navigator.userAgent;
-    } else {
-      userAgent = req.headers['user-agent'];
-    }
     return {
       currencyList,
       userList,
-      userAgent
+      userAgent: process.browser ? navigator.userAgent : req.headers['user-agent']
     };
   }
 
@@ -75,7 +69,7 @@ class HomePage extends React.Component<Props, State> {
   };
 
   // handle the change in the input field
-  handleChange = (event, index: number, fieldValue: string) => {
+  handleChange = (event: SyntheticMouseEvent<*>, index: number, fieldValue: string) => {
     this.setState({
       fieldValue
     });
