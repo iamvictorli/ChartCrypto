@@ -7,13 +7,7 @@ import next from 'next';
 import csv from 'fast-csv';
 import fetch from 'isomorphic-fetch';
 
-import {
-  deleteUserList,
-  getCurrencyList,
-  getUserList,
-  populateCurrencyList,
-  setUserList
-} from '../utils/redis';
+import { deleteUserList, getAppInfo, populateCurrencyList, updateUserList } from '../utils/redis';
 
 const app = express();
 // $FlowFixMe
@@ -34,14 +28,12 @@ io.on('connection', socket => {
     let response = await fetch(`https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${code}&market=USD&apikey=
       ${process.env.ALPHA_VANTAGE_API_KEY || 'redis://localhost:6379'}`);
     response = await response.json();
-    await setUserList(currency, JSON.stringify(response));
-    const userList = await getUserList();
+    const userList = await updateUserList(currency, JSON.stringify(response));
     io.emit('Add UserList', userList);
   });
 
   socket.on('Delete UserList', async currency => {
-    await deleteUserList(currency);
-    const userList = await getUserList();
+    const userList = await deleteUserList(currency);
     io.emit('Delete UserList', userList);
   });
 
@@ -61,9 +53,7 @@ const csvStream = csv
   .on('end', () => {
     nextApp.prepare().then(() => {
       app.get('/currencies', async (req, res) => {
-        const currencyList = await getCurrencyList('currencyList');
-        const userList = await getUserList('userList');
-        res.json({ currencyList, userList });
+        res.json(await getAppInfo());
       });
 
       app.get('*', (req, res) => nextHandler(req, res));

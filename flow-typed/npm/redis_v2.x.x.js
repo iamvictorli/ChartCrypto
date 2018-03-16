@@ -107,6 +107,7 @@ declare module "redis" {
     duplicate: () => RedisClient;
     end: (flush: boolean) => void;
     quit: () => void;
+    multi: () => Function
   }
 
   declare class RedisClientPromisified extends RedisClient {
