@@ -28,5 +28,6 @@ export const deleteUserList = (currencyTitle: string) => {
   client.hdelAsync('userList', currencyTitle);
 };
 
-export const populateCurrencyList = (currency: string) => client.saddAsync('currencyList', currency);
+export const populateCurrencyList = (currency: string) =>
+  client.saddAsync('currencyList', currency);
 export const getCurrencyList = () => client.smembersAsync('currencyList');

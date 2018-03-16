@@ -15,6 +15,8 @@ import {
   // $FlowFixMe
 } from 'recharts';
 import isEqual from 'lodash.isequal';
+import toPairs from 'lodash.topairs';
+import get from 'lodash.get';
 import moment from 'moment';
 
 type Props = {
@@ -28,6 +30,7 @@ class Graph extends React.Component<Props> {
   }
 
   render() {
+    // Nothing on the list
     if (this.props.userList.length === 0) {
       return (
         <h1 style={{ marginLeft: '24px' }}>
@@ -36,34 +39,31 @@ class Graph extends React.Component<Props> {
       );
     }
 
-    const list = this.props.userList.map(currency => JSON.parse(currency.metaData));
+    // have to aggregate data in the form of {date: date, c1: c1price, c2: c2price}
     let data = {};
-    list.forEach(currency => {
-      const currencyName = currency['Meta Data']['2. Digital Currency Code'];
-      Object.entries(currency['Time Series (Digital Currency Daily)']).forEach(entry => {
+    const cNamelist = [];
+    this.props.userList.forEach(cEntry => {
+      const cData: CurrencyJsonMetaData = JSON.parse(cEntry.metaData);
+      const cName = cData['Meta Data']['2. Digital Currency Code'];
+      cNamelist.push(cName);
+      toPairs(cData['Time Series (Digital Currency Daily)']).forEach(entry => {
         const date = new Date(entry[0]).valueOf();
-        const price = Number(entry[1]['1a. open (USD)']);
+        const price = Number(get(entry[1], '1a. open (USD)'));
+
         if (Object.prototype.hasOwnProperty.call(data, date)) {
-          data[date].push({ [currencyName]: price });
+          const cObj = get(data, date.toString());
+          cObj[cName] = price;
         } else {
-          data[date] = [{ [currencyName]: price }];
+          data[date] = { [cName]: price };
         }
       });
     });
 
     data = Object.entries(data)
-      .map(entry => {
-        const obj = {
-          date: Number(entry[0])
-        };
-        entry[1].forEach(currency => {
-          Object.entries(currency).forEach(currencyInfo => {
-            const [currencyName, price] = currencyInfo;
-            obj[currencyName] = price;
-          });
-        });
-        return obj;
-      })
+      .map(dateInfo => ({
+        date: Number(dateInfo[0]),
+        ...dateInfo[1]
+      }))
       .reverse();
 
     return (
@@ -99,10 +99,10 @@ class Graph extends React.Component<Props> {
             />
             <Tooltip labelFormatter={date => moment(date).format('MM[/]DD[/]YY')} />
             <Legend />
-            {list.map((currency, index) => (
+            {cNamelist.map((cCode, index) => (
               <Line
-                key={currency['Meta Data']['2. Digital Currency Code']}
-                dataKey={currency['Meta Data']['2. Digital Currency Code']}
+                key={cCode}
+                dataKey={cCode}
                 type="monotone"
                 dot={false}
                 connectNulls
@@ -115,10 +115,10 @@ class Graph extends React.Component<Props> {
               tickFormatter={date => moment(date).format('MM[/]DD[/]YY')}
             >
               <AreaChart>
-                {list.map((currency, index) => (
+                {cNamelist.map((cCode, index) => (
                   <Area
-                    key={currency['Meta Data']['2. Digital Currency Code']}
-                    dataKey={currency['Meta Data']['2. Digital Currency Code']}
+                    key={cCode}
+                    dataKey={cCode}
                     stroke={this.props.colors[index]}
                     fill={this.props.colors[index]}
                     dot={false}

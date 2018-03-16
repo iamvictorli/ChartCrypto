@@ -1,0 +1,15 @@
+declare module 'lodash.isequal' {
+  declare export default (value: any, other: any) => boolean;
+}
+
+declare module 'lodash.get' {
+  declare export default (
+    object?: ?Object | ?Array<any>,
+    path?: ?Array<string> | string,
+    defaultValue?: any
+  ) => any;
+}
+
+declare module 'lodash.topairs' {
+  declare export default (object?: ?Object | Array<*>) => Array<[string, any]>;
+}
