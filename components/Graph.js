@@ -111,7 +111,7 @@ class Graph extends React.Component<Props> {
             ))}
             <Brush
               dataKey="date"
-              startIndex={data.length - 90}
+              startIndex={data.length > 90 ? 90 : data.length - 10}
               tickFormatter={date => moment(date).format('MM[/]DD[/]YY')}
             >
               <AreaChart>

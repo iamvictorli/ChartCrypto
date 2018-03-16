@@ -20,8 +20,6 @@ const nextApp = next({ dev });
 const nextHandler = nextApp.getRequestHandler();
 
 io.on('connection', socket => {
-  console.log('a user connected');
-
   // send to all clients the user list
   socket.on('Add UserList', async currency => {
     const code = currency.split(':')[0];
@@ -35,10 +33,6 @@ io.on('connection', socket => {
   socket.on('Delete UserList', async currency => {
     const userList = await deleteUserList(currency);
     io.emit('Delete UserList', userList);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('user disconnect');
   });
 });
 
