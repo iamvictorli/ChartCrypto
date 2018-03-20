@@ -1,7 +1,7 @@
 {
-  "name": "StockLi",
+  "name": "ChartCrypto",
   "version": "1.0.0",
-  "description": "Stock Market Charter with real time updates",
+  "description": "Chart CryptoCurrencies with real time updates",
   "main": "src/server.js",
   "author": "Victor Li",
   "license": "MIT",
