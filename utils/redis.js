@@ -5,6 +5,12 @@ import bluebird from 'bluebird';
 
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
+// $FlowFixMe
+const client = redis.createClient({
+  host: process.env.REDIS_HOST || '127.0.0.1',
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASSWORD || 'password'
+});
 
 // redis returns one object with title keys and metadata value
 // need to aggregate object into an array of each key value pair as an object
@@ -18,24 +24,19 @@ const aggregateUserList = userList => {
 };
 
 export const populateCurrencyList = (currency: string) => {
-  const client = redis.createClient(process.env.REDIS_URL || 'redis://localhost:6379');
   client.saddAsync('currencyList', currency);
-  client.quit();
 };
 
 export const updateUserList = async (currencyTitle: string, currencyMetaData: string) => {
-  const client = redis.createClient(process.env.REDIS_URL || 'redis://localhost:6379');
   const [, userList] = await client
     .multi()
     .hset('userList', currencyTitle, currencyMetaData)
     .hgetall('userList')
     .execAsync();
-  client.quit();
   return aggregateUserList(userList);
 };
 
 export const deleteUserList = async (currencyTitle: string) => {
-  const client = redis.createClient(process.env.REDIS_URL || 'redis://localhost:6379');
   const [, userList] = await client
     .multi()
     .hdel('userList', currencyTitle)
@@ -45,7 +46,6 @@ export const deleteUserList = async (currencyTitle: string) => {
 };
 
 export const getAppInfo = async () => {
-  const client = redis.createClient(process.env.REDIS_URL || 'redis://localhost:6379');
   const [currencyList, userL] = await client
     .multi()
     .smembers('currencyList')
@@ -53,7 +53,6 @@ export const getAppInfo = async () => {
     .execAsync();
 
   const userList = aggregateUserList(userL);
-  client.quit();
   return {
     currencyList,
     userList

@@ -13,8 +13,10 @@ CryptoChart is a web application in which users can see recent trend lines of di
 
 * Run `npm install` or `yarn`.
 * In the root directory, create a .env file (or rename the env-sample file to .env) and place the following:
-  * PORT=_PORT NUMBER FOR EXPRESS_
-  * REDIS_URL=*LOCAL REDIS URL IS: redis://localhost:6379*
+  * PORT=*PORT NUMBER FOR EXPRESS*
+  * REDIS_HOST=*LOCAL REDIS HOST IS: 127.0.0.1*
+  * REDIS_PORT=*LOCAL REDIS PORT IS: 6379*
+  * REDIS_PASSWORD=*LOCAL REDIS PASSWORD IS: PASSWORD*
   * ALPHA_VANTAGE_API_KEY=*SIGN UP TO GET API KEY AT https://www.alphavantage.co/*
 * Run `redis-server` to start Redis.
 * In another terminal, run `npm build` or `yarn build`.

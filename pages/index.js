@@ -116,7 +116,7 @@ class HomePage extends React.Component<Props, State> {
 
         <MuiThemeProvider muiTheme={getMuiTheme({ userAgent })}>
           <div>
-            <Header name="CryptoCurrency Chart" />
+            <Header name="Chart CryptoCurrencies" />
             <Form
               handleChange={this.handleChange}
               buttonClick={this.buttonClick}
