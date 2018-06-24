@@ -1,42 +1,71 @@
 // @flow
 
-import React from 'react';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import FlatButton from 'material-ui/FlatButton';
+import * as React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: theme.spacing.unit / 2
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 256
+  },
+  button: {
+    margin: theme.spacing.unit / 2,
+    padding: 0
+  }
+});
 
 type Props = {
   handleChange: Function,
   buttonClick: Function,
-  fieldValue: string,
   currencyList: Array<string>,
-  buttonDisable: boolean
+  buttonDisable: boolean,
+  classes: Object,
+  fieldValue: String
 };
 
-const Form = ({ currencyList, handleChange, buttonClick, fieldValue, buttonDisable }: Props) => (
-  <div style={{ marginTop: '80px', marginLeft: '32px', display: 'flex' }}>
-    <SelectField
-      id="currencyList"
-      name="currencyList"
-      maxHeight={300}
-      onChange={handleChange}
-      value={fieldValue}
-    >
-      {currencyList.map(currency => (
-        <MenuItem key={currency} value={currency} primaryText={currency} />
-      ))}
-    </SelectField>
+const Form = ({
+  currencyList, handleChange, buttonClick, buttonDisable, classes, fieldValue
+}: Props) => (
+  <div className={classes.root}>
+    <FormControl className={classes.formControl}>
+      <InputLabel htmlFor="currency-auto-width">
+        Add Currency
+      </InputLabel>
+      <Select
+        value={fieldValue}
+        onChange={handleChange}
+        input={<Input name="currency" id="currency-auto-width" />}
+      >
+        <MenuItem value="">
+          <em>
+            None
+          </em>
+        </MenuItem>
+        {currencyList.map(currency => (
+          <MenuItem key={currency} value={currency}>
+            {currency}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
 
-    <FlatButton
-      label="Add"
-      hoverColor={buttonDisable ? '#E5E5E5' : '#FD8FB4'}
-      backgroundColor={buttonDisable ? '#E5E5E5' : '#FC4482'}
-      secondary
-      style={buttonDisable ? { color: '#A0A0A0' } : { color: 'white' }}
-      disabled={buttonDisable}
-      onClick={buttonClick}
-    />
+    <Button variant="fab" color="secondary" aria-label="add" disabled={buttonDisable} className={classes.button} onClick={buttonClick}>
+      <AddIcon />
+    </Button>
+
   </div>
 );
 
-export default Form;
+export default withStyles(styles)(Form);

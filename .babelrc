@@ -1,4 +1,4 @@
 {
-  "presets": ["env", "next/babel", "flow"],
-  "plugins": ["transform-class-properties", "transform-flow-strip-types"]
+  "presets": ["@babel/flow", "@babel/env", "next/babel"],
+  "plugins": ["transform-flow-strip-types"]
 }

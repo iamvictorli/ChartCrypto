@@ -7,10 +7,11 @@ import next from 'next';
 import csv from 'fast-csv';
 import fetch from 'isomorphic-fetch';
 
-import { deleteUserList, getAppInfo, populateCurrencyList, updateUserList } from '../utils/redis';
+import {
+  deleteUserList, getAppInfo, populateCurrencyList, updateUserList
+} from './redis';
 
 const app = express();
-// $FlowFixMe
 const server = http.Server(app);
 const io = socketIO(server);
 const port = parseInt(process.env.PORT, 10) || 3000;
@@ -24,7 +25,7 @@ io.on('connection', socket => {
   socket.on('Add UserList', async currency => {
     const code = currency.split(':')[0];
     let response = await fetch(`https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${code}&market=USD&apikey=
-      ${process.env.ALPHA_VANTAGE_API_KEY || 'redis://localhost:6379'}`);
+      ${process.env.ALPHA_VANTAGE_API_KEY}`);
     response = await response.json();
     const userList = await updateUserList(currency, JSON.stringify(response));
     io.emit('Add UserList', userList);

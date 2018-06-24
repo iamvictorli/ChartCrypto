@@ -1,37 +1,58 @@
 // @flow
 
 import * as React from 'react';
-import Chip from 'material-ui/Chip';
 import isEqual from 'lodash.isequal';
+import { withStyles } from '@material-ui/core/styles';
+import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    padding: theme.spacing.unit / 2
+  },
+  chip: {
+    margin: theme.spacing.unit / 2
+  }
+});
 
 type Props = {
   userList: Array<Currency>,
   deleteStock: Function,
-  colors: Array<string>
+  colors: Array<string>,
+  classes: Object
 };
 
 class List extends React.Component<Props> {
   shouldComponentUpdate(nextProps: { userList: Array<Currency> }) {
-    return !isEqual(this.props.userList, nextProps.userList);
+    const { userList } = this.props;
+    return !isEqual(userList, nextProps.userList);
   }
 
   render() {
-    const { userList, deleteStock, colors } = this.props;
+    const {
+      classes, userList, colors, deleteStock
+    } = this.props;
+
+    if (userList.length === 0) return null;
     return (
-      <div style={{ display: 'flex', flexWrap: 'wrap', marginLeft: '32px' }}>
+      <Paper className={classes.root}>
         {userList.map((currency, index) => (
           <Chip
             key={currency.title}
-            onRequestDelete={() => deleteStock(currency.title)}
-            style={{ margin: 4 }}
-            backgroundColor={colors[index]}
-          >
-            {currency.title}
-          </Chip>
+            label={currency.title}
+            onDelete={() => deleteStock(currency.title)}
+            className={classes.chip}
+            style={{
+              backgroundColor: colors[index]
+            }}
+          />
         ))}
-      </div>
+      </Paper>
     );
   }
 }
 
-export default List;
+export default withStyles(styles)(List);

@@ -1,12 +1,10 @@
 currency code,currency name
 2GIVE,GiveCoin
-ANS,NEO
 ANT,Aragon
 ATB,ATBCoin
 AVT,Aventus
 B3,B3Coin
 BAT,Basic-Attention-Token
-BAY,BitBay
 BCH,Bitcoin-Cash
 BITB,BitBean
 BITUSD,BitUSD
@@ -19,7 +17,6 @@ BUZZ,BuzzCoin
 CANN,CannabisCoin
 CCRB,CryptoCarbon
 CLOAK,CloakCoin
-CTR,Centra
 CVC,Civic
 DASH,Dash
 DGB,DigiByte

@@ -5,9 +5,13 @@
 
 [libs]
 flow-typed
+types/
 
 [lints]
 
 [options]
 
 [strict]
+
+[version]
+^0.75.0
