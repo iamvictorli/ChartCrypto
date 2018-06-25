@@ -17,13 +17,20 @@
     "flow": "flow"
   },
   "dependencies": {
+    "@babel/cli": "^7.0.0-beta.51",
+    "@babel/core": "^7.0.0-beta.51",
+    "@babel/preset-env": "^7.0.0-beta.51",
+    "@babel/preset-flow": "^7.0.0-beta.51",
+    "@babel/register": "^7.0.0-beta.51",
     "@material-ui/core": "^1.2.3",
     "@material-ui/docs": "^1.0.0-alpha.3",
     "@material-ui/icons": "^1.1.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "bluebird": "^3.5.1",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "fast-csv": "^2.4.1",
+    "flow-bin": "^0.75.0",
     "isomorphic-fetch": "^2.2.1",
     "jss": "^9.8.7",
     "lodash.get": "^4.4.2",
@@ -42,19 +49,12 @@
     "styled-jsx": "^2.2.7"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.51",
-    "@babel/core": "^7.0.0-beta.51",
-    "@babel/preset-env": "^7.0.0-beta.51",
-    "@babel/preset-flow": "^7.0.0-beta.51",
-    "@babel/register": "^7.0.0-beta.51",
     "babel-eslint": "^8.2.5",
-    "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "eslint": "4.19.1",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-plugin-flowtype": "^2.49.3",
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.9.1",
-    "flow-bin": "^0.75.0"
+    "eslint-plugin-react": "^7.9.1"
   }
 }

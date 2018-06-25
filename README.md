@@ -1,6 +1,6 @@
 # CryptoChart
 
-CryptoChart is a web application in which users can see recent trend lines of different cryptocurrencies and compare them with a chart. Additionally, live updates occur when other users adds or removes a cryptocurrency to compare.
+CryptoChart is a web application in which users can see recent price trend lines of different cryptocurrencies and compare them with a chart. Additionally, live updates occur when other users adds or removes a cryptocurrency.
 
 ## Getting Started
 
