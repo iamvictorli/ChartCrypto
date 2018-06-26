@@ -53,7 +53,7 @@ export const getAppInfo = async () => {
 
   const userList = aggregateUserList(userL);
   return {
-    currencyList,
+    currencyList: currencyList.sort(),
     userList
   };
 };

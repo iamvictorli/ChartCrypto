@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import fetch from 'isomorphic-fetch';
-import randomColor from 'randomcolor';
 import { withStyles } from '@material-ui/core/styles';
 
 import withRoot from '../helper/withRoot';
@@ -21,7 +20,8 @@ type State = {
   currencyList: Array<string>,
   userList: Array<Currency>,
   subscribe: boolean,
-  subscribed: boolean
+  subscribed: boolean,
+  colors: Array<string>
 };
 
 const styles = () => ({
@@ -36,7 +36,8 @@ class Homepage extends React.Component<Props, State> {
     subscribe: false,
     subscribed: false,
     currencyList: [],
-    userList: []
+    userList: [],
+    colors: []
   };
 
   componentDidMount() {
@@ -58,8 +59,9 @@ class Homepage extends React.Component<Props, State> {
     if (props.socket && !state.subscribe) {
       return {
         subscribe: true,
-        currencyList: props.currencyList.sort(),
-        userList: props.userList
+        currencyList: props.currencyList,
+        userList: props.userList,
+        colors: props.colors
       };
     }
     return null;
@@ -68,10 +70,11 @@ class Homepage extends React.Component<Props, State> {
   static async getInitialProps() {
     const port = process.env.PORT || 3000;
     const response = await fetch(`http://localhost:${port}/currencies`);
-    const { currencyList, userList } = await response.json();
+    const { currencyList, userList, colors } = await response.json();
     return {
       currencyList,
-      userList
+      userList,
+      colors
     };
   }
 
@@ -124,14 +127,19 @@ class Homepage extends React.Component<Props, State> {
   };
 
   // changes the userList for each broadcast
-  handleStocks = (newUserList: Array<Currency>) => {
-    this.setState({ userList: newUserList });
+  handleStocks = (info: {
+    userList: Array<Currency>,
+    colors: Array<string>
+  }) => {
+    const { userList, colors } = info;
+    this.setState({ userList, colors });
   };
 
   render() {
     const { classes } = this.props;
-    const { fieldValue, userList, currencyList } = this.state;
-    const colors = randomColor({ count: userList.length });
+    const {
+      fieldValue, userList, currencyList, colors
+    } = this.state;
     const buttonDisable = this.searchUserList(fieldValue);
 
     return (

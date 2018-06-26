@@ -10,6 +10,7 @@ import fetch from 'isomorphic-fetch';
 import {
   deleteUserList, getAppInfo, populateCurrencyList, updateUserList
 } from './redis';
+import randomColor from './randomColor';
 
 const app = express();
 const server = http.Server(app);
@@ -28,12 +29,14 @@ io.on('connection', socket => {
       ${process.env.ALPHA_VANTAGE_API_KEY}`);
     response = await response.json();
     const userList = await updateUserList(currency, JSON.stringify(response));
-    io.emit('Add UserList', userList);
+    const colors = randomColor(userList.length);
+    io.emit('Add UserList', { userList, colors });
   });
 
   socket.on('Delete UserList', async currency => {
     const userList = await deleteUserList(currency);
-    io.emit('Delete UserList', userList);
+    const colors = randomColor(userList.length);
+    io.emit('Delete UserList', { userList, colors });
   });
 });
 
@@ -48,7 +51,9 @@ const csvStream = csv
   .on('end', () => {
     nextApp.prepare().then(() => {
       app.get('/currencies', async (req, res) => {
-        res.json(await getAppInfo());
+        const appInfo = await getAppInfo();
+        const colors = randomColor(appInfo.userList.length);
+        res.json({ ...appInfo, colors });
       });
 
       app.get('*', (req, res) => nextHandler(req, res));
