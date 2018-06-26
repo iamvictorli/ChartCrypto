@@ -5,11 +5,6 @@
   "main": "src/server.js",
   "author": "Victor Li",
   "license": "MIT",
-  "engines": {
-    "node": "9.4.0",
-    "npm": "5.6.0",
-    "yarn": "1.5.1"
-  },
   "scripts": {
     "build": "next build && babel src -d dist",
     "dev": "node -r dotenv/config -r @babel/register dist/server.js",
