@@ -2,6 +2,32 @@
 
 CryptoChart is a web application in which users can see recent price trend lines of different cryptocurrencies and compare them with a chart. Additionally, live updates occur when other users adds or removes a cryptocurrency.
 
+## User Stories
+- [x] I can view a graph displaying the recent trend lines for each added cryptocurrency.
+- [x] I can add new cryptocurrencies by their symbol name.
+- [x] I can remove cryptocurrencies.
+- [x] I can see changes in real-time when any other user adds or removes a cryptocurrency.
+
+## Video Walkthrough
+Here's a walkthrough of implemented user stories:
+
+![](https://github.com/Li-Victor/ChartCrypto/blob/master/1.gif)
+
+GIF created with [Giphy Capture](https://giphy.com/apps/giphycapture).
+
+## Libraries
+
+* Express.js
+* React
+* Next.js
+* Flow
+* Redis
+* Socket.IO
+* Recharts
+* Alpha Vantage API
+* Material UI
+* Moment
+
 ## Getting Started
 
 ### Prerequisites
@@ -22,22 +48,3 @@ CryptoChart is a web application in which users can see recent price trend lines
 * In another terminal, run `npm build` or `yarn build`.
 * Then run `npm dev` or `yarn dev`.
 * Navigate to `localhost:PORT NUMBER IN ENV` in your browser.
-
-## User Stories
-- [x] I can view a graph displaying the recent trend lines for each added cryptocurrency.
-- [x] I can add new cryptocurrencies by their symbol name.
-- [x] I can remove cryptocurrencies.
-- [x] I can see changes in real-time when any other user adds or removes a cryptocurrency.
-
-## Libraries
-
-* Express.js
-* React
-* Next.js
-* Flow
-* Redis
-* Socket.IO
-* Recharts
-* Alpha Vantage API
-* Material UI
-* Moment
