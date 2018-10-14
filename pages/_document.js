@@ -12,7 +12,7 @@ class MyDocument extends Document {
       <html lang="en" dir="ltr">
         <Head>
           <title>
-            Chart CryptoCurrencies
+Chart CryptoCurrencies
           </title>
           <meta charSet="utf-8" />
           {/* Use minimum-scale=1 to enable GPU rasterization */}

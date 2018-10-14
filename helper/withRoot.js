@@ -36,7 +36,6 @@ function withRoot(Component) {
     }
   }
 
-
   WithRoot.getInitialProps = ctx => {
     if (Component.getInitialProps) {
       return Component.getInitialProps(ctx);

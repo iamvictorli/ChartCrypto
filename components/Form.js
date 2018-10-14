@@ -36,12 +36,17 @@ type Props = {
 };
 
 const Form = ({
-  currencyList, handleChange, buttonClick, buttonDisable, classes, fieldValue
+  currencyList,
+  handleChange,
+  buttonClick,
+  buttonDisable,
+  classes,
+  fieldValue
 }: Props) => (
   <div className={classes.root}>
     <FormControl className={classes.formControl}>
       <InputLabel htmlFor="currency-auto-width">
-        Add Currency
+Add Currency
       </InputLabel>
       <Select
         value={fieldValue}
@@ -50,7 +55,7 @@ const Form = ({
       >
         <MenuItem value="">
           <em>
-            None
+None
           </em>
         </MenuItem>
         {currencyList.map(currency => (
@@ -61,10 +66,16 @@ const Form = ({
       </Select>
     </FormControl>
 
-    <Button variant="fab" color="secondary" aria-label="add" disabled={buttonDisable} className={classes.button} onClick={buttonClick}>
+    <Button
+      variant="fab"
+      color="secondary"
+      aria-label="add"
+      disabled={buttonDisable}
+      className={classes.button}
+      onClick={buttonClick}
+    >
       <AddIcon />
     </Button>
-
   </div>
 );
 

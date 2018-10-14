@@ -15,7 +15,7 @@ class MyApp extends App {
 
   state = {
     socket: null
-  }
+  };
 
   componentDidMount() {
     // connect to WS server and listen event

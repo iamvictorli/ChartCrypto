@@ -86,7 +86,7 @@ class Homepage extends React.Component<Props, State> {
       socket.on('Add UserList', this.handleStocks);
       socket.on('Delete UserList', this.handleStocks);
     }
-  }
+  };
 
   // handle the change in the input field
   handleChange = (event: SyntheticMouseEvent<*>) => {
@@ -110,7 +110,7 @@ class Homepage extends React.Component<Props, State> {
   searchCurrencyList = (value: string): boolean => {
     const { currencyList } = this.state;
     return currencyList.some(currency => currency === value);
-  }
+  };
 
   searchUserList = (value: string): boolean => {
     // value is a string when initial state or when Select is None
@@ -119,7 +119,7 @@ class Homepage extends React.Component<Props, State> {
 
     const { userList } = this.state;
     return userList.some(userCurrency => userCurrency.title === value);
-  }
+  };
 
   deleteStock = (currencyName: string) => {
     const { socket } = this.props;
@@ -127,10 +127,7 @@ class Homepage extends React.Component<Props, State> {
   };
 
   // changes the userList for each broadcast
-  handleStocks = (info: {
-    userList: Array<Currency>,
-    colors: Array<string>
-  }) => {
+  handleStocks = (info: { userList: Array<Currency>, colors: Array<string> }) => {
     const { userList, colors } = info;
     this.setState({ userList, colors });
   };

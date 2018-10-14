@@ -31,11 +31,7 @@ const Header = ({ name, classes }: Props) => (
         <Typography variant="headline" color="inherit" className={classes.flex}>
           {name}
         </Typography>
-        <Tooltip
-          id="appbar-github"
-          title="GitHub"
-          enterDelay={100}
-        >
+        <Tooltip id="appbar-github" title="GitHub" enterDelay={100}>
           <IconButton
             component="a"
             color="inherit"
