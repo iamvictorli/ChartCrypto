@@ -8,7 +8,12 @@ import csv from 'fast-csv';
 import fetch from 'isomorphic-fetch';
 
 import {
-  deleteUserList, getAppInfo, populateCurrencyList, updateUserList
+  deleteUserList,
+  getAppInfo,
+  populateCurrencyList,
+  updateUserList,
+  getUserList,
+  deleteCurrencyList
 } from './redis';
 import randomColor from './randomColor';
 
@@ -28,9 +33,23 @@ io.on('connection', socket => {
     let response = await fetch(`https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${code}&market=USD&apikey=
       ${process.env.ALPHA_VANTAGE_API_KEY}`);
     response = await response.json();
-    const userList = await updateUserList(currency, JSON.stringify(response));
-    const colors = randomColor(userList.length);
-    io.emit('Add UserList', { userList, colors });
+    if (response['Error Message']) {
+      // delete from currency list
+      await deleteCurrencyList(currency);
+      const { currencyList, userList } = await getAppInfo();
+      const colors = randomColor(userList.length);
+      io.emit('Update App Info', { currencyList, userList, colors });
+    } else if (response.Information) {
+      // hit limit of requests
+      const userList = await getUserList();
+      const colors = randomColor(userList.length);
+      io.emit('Add UserList', { userList, colors });
+    } else if (response['Meta Data']) {
+      // real currency response
+      const userList = await updateUserList(currency, JSON.stringify(response));
+      const colors = randomColor(userList.length);
+      io.emit('Add UserList', { userList, colors });
+    }
   });
 
   socket.on('Delete UserList', async currency => {

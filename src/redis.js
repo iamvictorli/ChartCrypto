@@ -57,3 +57,10 @@ export const getAppInfo = async () => {
     userList
   };
 };
+
+export const getUserList = async () => {
+  const userList = await client.hgetallAsync('userList');
+  return aggregateUserList(userList);
+};
+
+export const deleteCurrencyList = async (currency: string) => client.sremAsync('currencyList', currency);

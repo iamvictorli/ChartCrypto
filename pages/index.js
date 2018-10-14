@@ -51,8 +51,7 @@ class Homepage extends React.Component<Props, State> {
   // close socket connection
   componentWillUnmount() {
     const { socket } = this.props;
-    socket.off('Add UserList', this.handleStocks);
-    socket.off('Delete UserList', this.handleStocks);
+    socket.close();
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -85,6 +84,7 @@ class Homepage extends React.Component<Props, State> {
       // connect to WS server and listen event
       socket.on('Add UserList', this.handleStocks);
       socket.on('Delete UserList', this.handleStocks);
+      socket.on('Update App Info', this.updateAppInfo);
     }
   };
 
@@ -130,6 +130,16 @@ class Homepage extends React.Component<Props, State> {
   handleStocks = (info: { userList: Array<Currency>, colors: Array<string> }) => {
     const { userList, colors } = info;
     this.setState({ userList, colors });
+  };
+
+  // updating app info
+  updateAppInfo = (info: {
+    currencyList: Array<string>,
+    userList: Array<Currency>,
+    colors: Array<string>
+  }) => {
+    const { userList, colors, currencyList } = info;
+    this.setState({ userList, colors, currencyList });
   };
 
   render() {
