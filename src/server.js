@@ -60,26 +60,41 @@ io.on('connection', socket => {
 });
 
 // start application after adding all the values from the digital_currency_list
-const csvStream = csv
-  .fromPath('./digital_currency_list.csv', { headers: true })
-  .on('data', async data => {
-    csvStream.pause();
-    await populateCurrencyList(`${data['currency code']}: ${data['currency name']}`);
-    csvStream.resume();
-  })
-  .on('end', () => {
-    nextApp.prepare().then(() => {
-      app.get('/currencies', async (req, res) => {
-        const appInfo = await getAppInfo();
-        const colors = randomColor(appInfo.userList.length);
-        res.json({ ...appInfo, colors });
-      });
+// const csvStream = csv
+//   .fromPath('./digital_currency_list.csv', { headers: true })
+//   .on('data', async data => {
+//     csvStream.pause();
+//     await populateCurrencyList(`${data['currency code']}: ${data['currency name']}`);
+//     csvStream.resume();
+//   })
+//   .on('end', () => {
+//     nextApp.prepare().then(() => {
+//       app.get('/currencies', async (req, res) => {
+//         const appInfo = await getAppInfo();
+//         const colors = randomColor(appInfo.userList.length);
+//         res.json({ ...appInfo, colors });
+//       });
 
-      app.get('*', (req, res) => nextHandler(req, res));
+//       app.get('*', (req, res) => nextHandler(req, res));
 
-      server.listen(port, err => {
-        if (err) throw err;
-        console.log(`Listening on port ${port}`);
-      });
-    });
+//       server.listen(port, err => {
+//         if (err) throw err;
+//         console.log(`Listening on port ${port}`);
+//       });
+//     });
+//   });
+
+nextApp.prepare().then(() => {
+  app.get('/currencies', async (req, res) => {
+    const appInfo = await getAppInfo();
+    const colors = randomColor(appInfo.userList.length);
+    res.json({ ...appInfo, colors });
   });
+
+  app.get('*', (req, res) => nextHandler(req, res));
+
+  server.listen(port, err => {
+    if (err) throw err;
+    console.log(`Listening on port ${port}`);
+  });
+});
