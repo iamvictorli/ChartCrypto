@@ -5,11 +5,7 @@ import bluebird from 'bluebird';
 
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
-const client = redis.createClient({
-  host: process.env.REDIS_HOST || '127.0.0.1',
-  port: Number(process.env.REDIS_PORT) || 6379,
-  password: process.env.REDIS_PASSWORD || 'password'
-});
+const client = redis.createClient(process.env.REDIS_URL);
 
 // redis returns one object with title keys and metadata value
 // need to aggregate object into an array of each key value pair as an object
